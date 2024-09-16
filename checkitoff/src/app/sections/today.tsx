@@ -18,7 +18,7 @@ const Today = forwardRef((_, ref) => {
     
     const fetchTasks = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/api/today-tasks', {
+            const response = await axios.get('https://checkitoff-virid.vercel.app/api/today-tasks', {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('authToken')}`
                 }
@@ -78,7 +78,7 @@ const Today = forwardRef((_, ref) => {
             setIsLoading(true);
             try {
                 const response = await axios.post(
-                    'http://localhost:8000/api/today-tasks',
+                    'https://checkitoff-virid.vercel.app/api/today-tasks',
                     { tasks: updatedTasks },
                     {
                         headers: {

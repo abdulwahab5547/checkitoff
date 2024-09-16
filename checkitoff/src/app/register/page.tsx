@@ -25,7 +25,7 @@ function Register(){
     const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8000/api/signup', formData);
+            const response = await axios.post('https://checkitoff-virid.vercel.app/api/signup', formData);
             toast.success('Account created!');
             console.log('User created:', response.data);
             setTimeout(() => {

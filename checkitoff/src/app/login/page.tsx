@@ -67,7 +67,10 @@ function Login(){
                         </div>
                         <div className='w-[70%]'>
                             <p className="md:text-3xl text-2xl font-bold">check<span className="text-orange">it</span>off.</p>
-                            <p className='pt-3'>made by Abdul, this minimal to-do list app lets you add today's and upcoming tasks and check them off when they're done. </p>
+                            <p className="pt-3">
+                                made by Abdul, this minimal to-do list app lets you add today&apos;s and upcoming tasks and check them off when they&apos;re done.
+                            </p>
+
                         </div>
                     </div>
                     <div className='flex gap-5 items-center pb-4'>

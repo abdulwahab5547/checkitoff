@@ -1,6 +1,6 @@
 import Below from '../../assets/text-below.svg'
 import Image from 'next/image'
-import { useState, useEffect, useRef, useCallback} from 'react';
+import { useImperativeHandle, forwardRef, useState, useEffect, useRef, useCallback} from 'react';
 import axios from 'axios';
 import TaskCard from './taskcard'
 import { debounce } from 'lodash';
@@ -10,26 +10,29 @@ interface Task {
     completed: boolean;
 }
 
-function Upcoming(){
+const Upcoming = forwardRef((_, ref) => {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const taskRefs = useRef<(HTMLInputElement | null)[]>([]);
+      const fetchTasks = async () => {
+        try {
+            const response = await axios.get('http://localhost:8000/api/upcoming-tasks', {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('authToken')}`
+                }
+            });
+            setTasks(response.data.tasks); // Set fetched tasks
+        } catch (error) {
+            console.error('Error fetching tasks:', error);
+        }
+    };
     useEffect(() => {
-        const fetchTasks = async () => {
-            try {
-                const response = await axios.get('http://localhost:8000/api/upcoming-tasks', {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('authToken')}`
-                    }
-                });
-                setTasks(response.data.tasks); // Set fetched tasks
-            } catch (error) {
-                console.error('Error fetching tasks:', error);
-            }
-        };
-
         fetchTasks();
     }, []);
+
+    const refreshUpcoming = () => {
+        fetchTasks();
+      };
     
     const addTask = (index?: number) => {
         const newTask = { text: '', completed: false };
@@ -118,6 +121,10 @@ function Upcoming(){
         }
     };
 
+    useImperativeHandle(ref, () => ({
+        refreshUpcoming,
+      }));
+
     return(
         <div className='flex w-[100%] md:w-[50%] pb-10'>
             <div className='w-[93%] md:w-[80%] m-auto'>
@@ -163,6 +170,6 @@ function Upcoming(){
             </div>
         </div>
     )
-}
+});
 
 export default Upcoming; 

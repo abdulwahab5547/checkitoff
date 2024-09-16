@@ -1,6 +1,6 @@
 import Below from '../../assets/text-below.svg'
 import Image from 'next/image'
-import { useState, useEffect, useRef, useCallback} from 'react';
+import { useImperativeHandle, forwardRef, useState, useEffect, useRef, useCallback} from 'react';
 import axios from 'axios';
 import TaskCard from './taskcard'
 import { debounce } from 'lodash';
@@ -10,26 +10,32 @@ interface Task {
     completed: boolean;
 }
 
-function Today(){
+const Today = forwardRef((_, ref) => {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const taskRefs = useRef<(HTMLInputElement | null)[]>([]);
-    useEffect(() => {
-        const fetchTasks = async () => {
-            try {
-                const response = await axios.get('http://localhost:8000/api/today-tasks', {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('authToken')}`
-                    }
-                });
-                setTasks(response.data.tasks); // Set fetched tasks
-            } catch (error) {
-                console.error('Error fetching tasks:', error);
-            }
-        };
 
+    
+    const fetchTasks = async () => {
+        try {
+            const response = await axios.get('http://localhost:8000/api/today-tasks', {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('authToken')}`
+                }
+            });
+            setTasks(response.data.tasks); 
+        } catch (error) {
+            console.error('Error fetching tasks:', error);
+        }
+    };
+
+    useEffect(() => {
         fetchTasks();
     }, []);
+
+    const refreshToday = () => {   
+        fetchTasks();
+    };
     
     const addTask = (index?: number) => {
         const newTask = { text: '', completed: false };
@@ -118,6 +124,10 @@ function Today(){
         }
     };
 
+    useImperativeHandle(ref, () => ({
+        refreshToday,
+      }));
+
     return(
         <div className='flex w-[100%] md:w-[50%] pb-10'>
             <div className='w-[93%] md:w-[80%] m-auto'>
@@ -163,6 +173,6 @@ function Today(){
             </div>
         </div>
     )
-}
+});
 
 export default Today; 

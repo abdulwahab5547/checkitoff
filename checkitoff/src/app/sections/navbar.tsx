@@ -1,13 +1,15 @@
 import Me from '../../assets/me.jpeg'
+import Favicon from '../favicon.ico'
 import Image from 'next/image'
 import { useAuth } from '../functions/auth-context';
 import Modal from '../functions/modal';
 import { useState } from 'react';
 
 interface NavbarProps {
-}
+    refresh?: () => void;
+  }
 
-const Navbar: React.FC<NavbarProps> = ({ }) => {
+const Navbar: React.FC<NavbarProps> = ({ refresh }) => {
     const { logout } = useAuth();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -24,11 +26,25 @@ const Navbar: React.FC<NavbarProps> = ({ }) => {
         setIsModalOpen(false);
     };
 
+    const [isRotating, setIsRotating] = useState(false);
+    const handleRefresh = () => {
+        if (refresh) {  
+          setIsRotating(true);
+          refresh();
+          setTimeout(() => {
+            setIsRotating(false);
+          }, 1500);
+        }
+      };
+
     return(
         <div>
             <div className="flex justify-between items-center pt-3 pb-3 md:w-[94%] w-[90%] m-auto">
-                <div>
-                    <a href='/' className="md:text-3xl text-2xl font-bold">check<span className="text-orange">it</span>off.</a>
+                <div className=''>
+                    <a href='/' className='flex gap-3 items-center'>
+                        <Image src={Favicon} alt='' width={35} className='rounded-xl'/>
+                        <p className="md:text-3xl text-2xl font-bold hidden md:block">check<span className="text-orange">it</span>off.</p>
+                    </a>
                 </div>
                 <div className='md:flex hidden gap-5 items-center '>
                     <div>
@@ -46,16 +62,18 @@ const Navbar: React.FC<NavbarProps> = ({ }) => {
                     </div>
                     
                 </div>
-                <div className='flex gap-5 items-center'>
-                    <div className='w-7'>
+                <div className='flex gap-6 items-center'>
+                    <div className='w-4'>
                         
                     </div>
                     
+                    <a href='/'><i className="text-sm fa-solid fa-home hover:text-orange hover:cursor-pointer"></i></a>
+                    <a href='/settings'><i className="text-sm fa-solid fa-gear hover:text-orange hover:cursor-pointer"></i></a>
+                    <div onClick={handleRefresh}>
+                        <i className={`fa-solid fa-arrows-rotate hover:text-orange hover:cursor-pointer ${isRotating ? 'rotate' : ''}`}></i>
+                    </div>
                     
-                    {/* <a href='/login' className="hover:text-orange hover:cursor-pointer">login</a>
-                    <a href='/register' className="hover:text-orange hover:cursor-pointer">register</a> */}
-                    
-                    <a onClick={handleLogout} className="hover:text-orange hover:cursor-pointer">logout<span className='pl-2'><i className="text-sm fa-solid fa-arrow-right"></i></span></a>
+                    <a onClick={handleLogout} className="hover:text-orange hover:cursor-pointer flex"><span className='hidden md:block pr-1'>logout</span><span className='md:pl-2'><i className="text-sm fa-solid fa-right-from-bracket"></i></span></a>
                     <Modal
                         isOpen={isModalOpen}
                         onClose={handleCloseModal}

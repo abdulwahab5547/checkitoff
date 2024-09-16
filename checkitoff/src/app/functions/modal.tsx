@@ -31,22 +31,22 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
       <div
         ref={modalRef}
         className="p-6 rounded-xl shadow-lg max-w-sm mx-auto bg-lessDark"
-        onClick={(e) => e.stopPropagation()} // Prevent clicks inside the modal from closing it
+        onClick={(e) => e.stopPropagation()} 
       >
-        <h2 className="text-lg font-bold mb-4">Confirm Logout</h2>
-        <p className="mb-4">Are you sure you want to log out?</p>
+        <h2 className="text-lg font-bold mb-4">confirm logout</h2>
+        <p className="mb-4">are you sure you want to log out?</p>
         <div className="flex justify-end">
           <button
             onClick={onConfirm}
             className="bg-orange text-white px-3 py-1 rounded mr-2"
           >
-            Yes, Logout
+            yes, logout
           </button>
           <button
             onClick={onClose}
             className="bg-gray-300 px-3 py-1 rounded text-dark"
           >
-            Cancel
+            cancel
           </button>
         </div>
       </div>

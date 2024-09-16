@@ -162,6 +162,43 @@ app.post('/api/upcoming-tasks', authenticateToken, async (req, res) => {
 });
 
 
+// Account details
+
+app.get('/api/account-settings', authenticateToken, async (req, res) => {
+    try {
+      const user = await User.findById(req.user.id, 'username password');
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      res.json({ username: user.username, password: user.password });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+app.put('/api/account-settings', authenticateToken, async (req, res) => {
+    const { username, password } = req.body;
+    try {
+      const user = await User.findById(req.user.id);
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      if (username) user.username = username;
+      if (password) user.password = password;  
+  
+      await user.save();
+  
+      res.json({ message: 'Account settings updated successfully' });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+  
+
+
 // Example routes
 app.get('/', (req, res) => res.send('Hello World!'));
 app.get('/something', (req, res) => res.send('Hello something something!'));

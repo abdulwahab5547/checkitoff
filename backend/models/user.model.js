@@ -3,11 +3,13 @@ import mongoose from "mongoose";
 const todaySchema = new mongoose.Schema({
     text: { type: String },
     completed: { type: Boolean, default: false }, 
+    archived: { type: Boolean, default: false },
 }, { timestamps: true });
 
 const upcomingSchema = new mongoose.Schema({
     text: { type: String },
-    completed: { type: Boolean, default: false }, 
+    completed: { type: Boolean, default: false },
+    archived: { type: Boolean, default: false }, 
 }, { timestamps: true });
 
 const userSchema = new mongoose.Schema(

@@ -175,4 +175,6 @@ const Today = forwardRef((_, ref) => {
     )
 });
 
+Today.displayName = "Today";
+
 export default Today; 

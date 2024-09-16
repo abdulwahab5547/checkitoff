@@ -172,4 +172,6 @@ const Upcoming = forwardRef((_, ref) => {
     )
 });
 
+Upcoming.displayName = "Upcoming";
+
 export default Upcoming; 

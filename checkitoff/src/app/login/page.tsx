@@ -27,7 +27,7 @@ function Login(){
     const handleSubmit  = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8000/api/login', formData);
+            const response = await axios.post('https://checkitoff-virid.vercel.app/api/login', formData);
             if (response.data.token) {
                 localStorage.setItem('authToken', response.data.token);
                 login();

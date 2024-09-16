@@ -17,7 +17,7 @@ function Settings() {
     useEffect(() => {
         const fetchAccountSettings = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/account-settings', {
+                const response = await fetch('https://checkitoff-virid.vercel.app/api/account-settings', {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('authToken')}`, // Assuming token is stored in localStorage
@@ -50,7 +50,7 @@ function Settings() {
         e.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:8000/api/account-settings', {
+            const response = await fetch('https://checkitoff-virid.vercel.app/api/account-settings', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

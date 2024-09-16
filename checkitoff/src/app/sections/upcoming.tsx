@@ -16,7 +16,7 @@ const Upcoming = forwardRef((_, ref) => {
     const taskRefs = useRef<(HTMLInputElement | null)[]>([]);
       const fetchTasks = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/api/upcoming-tasks', {
+            const response = await axios.get('https://checkitoff-virid.vercel.app/api/upcoming-tasks', {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('authToken')}`
                 }
@@ -75,7 +75,7 @@ const Upcoming = forwardRef((_, ref) => {
             setIsLoading(true);
             try {
                 const response = await axios.post(
-                    'http://localhost:8000/api/upcoming-tasks',
+                    'https://checkitoff-virid.vercel.app/api/upcoming-tasks',
                     { tasks: updatedTasks },
                     {
                         headers: {

@@ -42,8 +42,9 @@ const Navbar: React.FC<NavbarProps> = ({ refresh }) => {
             <div className="flex justify-between items-center pt-3 pb-3 md:w-[94%] w-[90%] m-auto">
                 <div className=''>
                     <a href='/' className='flex gap-3 items-center'>
-                        <Image src={Favicon} alt='' width={35} className='rounded-xl'/>
+                        <Image src={Favicon} alt='' width={30} className='rounded-xl'/>
                         <p className="md:text-3xl text-2xl font-bold hidden md:block">check<span className="text-orange">it</span>off.</p>
+                        <p className="sm:text-xl text-sm font-bold md:hidden">check<span className="text-orange">it</span><span className=''>off.</span></p>
                     </a>
                 </div>
                 <div className='md:flex hidden gap-5 items-center '>
@@ -60,7 +61,6 @@ const Navbar: React.FC<NavbarProps> = ({ refresh }) => {
                             <a href='https://portfolio-eta-ten-43.vercel.app/' className='text-lg font-semibold hover:text-orange hover:cursor-pointer'>abdul <br/> <span>wahab<span className='text-orange'>.</span></span></a>
                         </div>
                     </div>
-                    
                 </div>
                 <div className='flex gap-6 items-center'>
                     <div className='w-4'>

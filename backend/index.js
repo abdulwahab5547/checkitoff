@@ -14,9 +14,27 @@ const SECRET_KEY = process.env.SECRET_KEY;
 
 // Middleware
 app.use(json());
+// app.use(cors({
+//   origin: ["https://checkitoff-frontend.vercel.app"],
+//   methods: ["POST", "GET"],
+//   credentials: true
+// }));
+
+const allowedOrigins = [
+  "https://checkitoff-frontend.vercel.app",
+  "https://checkitoff-v1-uqoy.vercel.app"
+];
+
 app.use(cors({
-  origin: ["https://checkitoff-frontend.vercel.app"],
-  methods: ["POST", "GET"],
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g., mobile apps or Postman)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
 
@@ -156,6 +174,140 @@ app.post('/api/upcoming-tasks', authenticateToken, async (req, res) => {
       await user.save();
 
       res.json({ message: 'Tasks saved successfully', tasks: user.upcomingTasks });
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+});
+
+
+
+// Notes
+
+app.get('/api/notes', authenticateToken, async (req, res) => {
+  try {
+      const user = await User.findById(req.user.id);
+
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+
+      res.json({ notes: user.notes });
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+});
+
+app.post('/api/notes', authenticateToken, async (req, res) => {
+  try {
+      const { notes } = req.body;
+
+      if (!Array.isArray(notes) || !notes.every(note => 
+          typeof note.title === 'string' &&
+          typeof note.content === 'string'
+      )) {
+          return res.status(400).json({ message: 'Invalid task format' });
+      }
+
+      const user = await User.findById(req.user.id);
+
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+
+      // Append the new note(s) to the existing notes
+      user.notes.push(...notes);
+      await user.save();
+
+      res.json({ message: 'Tasks saved successfully', notes: user.notes });
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+});
+
+app.put('/api/notes/:title', authenticateToken, async (req, res) => {
+  try {
+      const { title, content } = req.body;  // Extract title and content from request body
+      const { title: oldTitle } = req.params;  // Extract the current title from request params
+
+      // Validate input
+      if (typeof title !== 'string' || typeof content !== 'string') {
+          return res.status(400).json({ message: 'Invalid input format' });
+      }
+
+      // Find the user
+      const user = await User.findById(req.user.id);
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+
+      // Find the note by its title
+      const note = user.notes.find(note => note.title === oldTitle);
+
+      if (!note) {
+          return res.status(404).json({ message: 'Note not found' });
+      }
+
+      // Update the note's title and content
+      note.title = title;
+      note.content = content;
+
+      // Save the updated user data
+      await user.save();
+
+      res.json({ message: 'Note updated successfully', notes: user.notes });
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+});
+
+app.delete('/api/notes/:title', authenticateToken, async (req, res) => {
+  try {
+      const { title } = req.params; // Get note title from request parameters
+
+      if (!title) {
+          return res.status(400).json({ message: 'Title is required' });
+      }
+
+      // Find user by ID and remove the note with the matching title
+      const user = await User.findById(req.user.id);
+
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+
+      // Filter out the note with the matching title
+      user.notes = user.notes.filter(note => note.title !== title);
+
+      await user.save();
+
+      res.json({ message: 'Note successfully deleted', notes: user.notes });
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+});
+
+
+app.delete('/api/notes/:id', authenticateToken, async (req, res) => {
+  try {
+      const { id } = req.params; // Get note ID from request parameters
+
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+          return res.status(400).json({ message: 'Invalid note ID' });
+      }
+
+      // Find user by ID and remove the note
+      const user = await User.findById(req.user.id);
+
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+
+      // Filter out the note with the matching ID
+      user.notes = user.notes.filter(note => note.id !== id);
+
+      await user.save();
+
+      res.json({ message: 'Note successfully deleted', notes: user.notes });
   } catch (error) {
       res.status(500).json({ message: error.message });
   }

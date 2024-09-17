@@ -14,29 +14,29 @@ const SECRET_KEY = process.env.SECRET_KEY;
 
 // Middleware
 app.use(json());
-app.use(cors({
-  origin: ["https://checkitoff-frontend.vercel.app"],
-  methods: ["POST", "GET"],
-  credentials: true
-}));
-
-// const allowedOrigins = [
-//   "https://checkitoff-frontend.vercel.app",
-//   "https://checkitoff-v1-uqoy.vercel.app"
-// ];
-
 // app.use(cors({
-//   origin: (origin, callback) => {
-//     // Allow requests with no origin (e.g., mobile apps or Postman)
-//     if (!origin || allowedOrigins.includes(origin)) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   },
-//   methods: ["GET", "POST", "PUT", "DELETE"],
+//   origin: ["https://checkitoff-frontend.vercel.app"],
+//   methods: ["POST", "GET"],
 //   credentials: true
 // }));
+
+const allowedOrigins = [
+  "https://checkitoff-frontend.vercel.app",
+  "https://checkitoff-v1-uqoy.vercel.app"
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g., mobile apps or Postman)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 
 // app.use(cors({
 //     origin: '*',

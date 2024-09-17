@@ -12,6 +12,13 @@ const upcomingSchema = new mongoose.Schema({
     archived: { type: Boolean, default: false }, 
 }, { timestamps: true });
 
+const notesSchema = new mongoose.Schema({
+    title: { type: String },
+    content: { type: String },
+    pinned: { type: Boolean, default: false },
+    archived: { type: Boolean, default: false }, 
+}, { timestamps: true });
+
 const userSchema = new mongoose.Schema(
     {
         username: {
@@ -26,11 +33,10 @@ const userSchema = new mongoose.Schema(
         },
         todayTasks: [todaySchema],
         upcomingTasks: [upcomingSchema],
+        notes: [notesSchema],
     }, 
     { timestamps: true }
 );
-
-const User = mongoose.model("User", userSchema);
 
 // Define the standalone functions
 const findOne = async (criteria) => {

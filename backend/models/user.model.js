@@ -38,6 +38,11 @@ const userSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
+
+
+
+const User = mongoose.model("User", userSchema);
+
 // Define the standalone functions
 const findOne = async (criteria) => {
     return await User.findOne(criteria);
